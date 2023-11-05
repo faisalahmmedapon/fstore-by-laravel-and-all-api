@@ -44,6 +44,7 @@ class ProductController extends Controller
             $request_product['photo'] = '/product/' . $imageName;
 
         }
+
         if ($request->status == "on") {
             $request_product['status'] = true;
         }else{
@@ -68,12 +69,52 @@ class ProductController extends Controller
 
     public function update(Request $request, string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $request_product = $request->all();
+        $request_product['slug'] = Str::slug($request->title);
+
+        if ($image = $request->file('photo')) {
+            // Get the current image path for removal
+            $oldImagePath = $product->photo;
+
+            // Generate a unique image name
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+            // Define the storage path for the new image
+            $imagePath = '/product/';
+
+            // Store the new image and remove the old one
+            updateImage($image, $imageName, $imagePath, $oldImagePath);
+
+            // Update the 'photo' field in the request data
+            $request_product['photo'] = $imagePath . $imageName;
+        } else {
+            // If no new image is uploaded, keep the existing image path
+            $request_product['photo'] = $product->photo;
+        }
+        if ($request->status == "on") {
+            $request_product['status'] = true;
+        }else{
+            $request_product['status'] = false;
+        }
+
+       $product->update($request_product);
+
+        return response()->json([
+            'message' => "Product Create Successfully",
+            'product' => $product,
+        ]);
     }
 
 
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        unlinkThisImage($product->photo);
+        $product->delete();
+
+        return response()->json([
+            'message' => "Product Delete Successfully",
+            'category' => $product,
+        ]);
     }
 }
