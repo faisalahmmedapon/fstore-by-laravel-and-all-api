@@ -37,11 +37,11 @@ class CategoryController extends Controller
             // get new image name
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
             // send image store location path
-            $path = '/category/';
+            $path = '/images/category/';
             // store image using function
             storeImage($image, $imageName, $path);
             // save name in database using this code
-            $request_category['photo'] = '/category/' . $imageName;
+            $request_category['photo'] = '/images/category/' . $imageName;
 
         }
         if ($request->status == "on") {
@@ -83,7 +83,7 @@ class CategoryController extends Controller
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
 
             // Define the storage path for the new image
-            $imagePath = '/category/';
+            $imagePath = '/images/category/';
 
             // Store the new image and remove the old one
             updateImage($image, $imageName, $imagePath, $oldImagePath);

@@ -37,11 +37,11 @@ class ProductController extends Controller
             // get new image name
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
             // send image store location path
-            $path = '/product/';
+            $path = '/images/product/';
             // store image using function
             storeImage($image, $imageName, $path);
             // save name in database using this code
-            $request_product['photo'] = '/product/' . $imageName;
+            $request_product['photo'] = '/images/product/' . $imageName;
 
         }
 
@@ -81,7 +81,7 @@ class ProductController extends Controller
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
 
             // Define the storage path for the new image
-            $imagePath = '/product/';
+            $imagePath = '/images/product/';
 
             // Store the new image and remove the old one
             updateImage($image, $imageName, $imagePath, $oldImagePath);
